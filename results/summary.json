@@ -1,0 +1,34 @@
+{
+  "exact_lifted_astar": {
+    "episodes": 240.0,
+    "success_rate": 1.0,
+    "mean_cost_successes": 28.883333333333333,
+    "mean_expansions": 865.5208333333334,
+    "mean_pruned_commitments": 0.0
+  },
+  "greedy_local": {
+    "episodes": 240.0,
+    "success_rate": 0.39166666666666666,
+    "mean_cost_successes": 27.03191489361702,
+    "mean_expansions": 41.05,
+    "mean_pruned_commitments": 0.0
+  },
+  "relaxed_agenda": {
+    "episodes": 240.0,
+    "success_rate": 0.0,
+    "mean_cost_successes": 0.0,
+    "mean_expansions": 322.9375,
+    "mean_pruned_commitments": 0.0
+  },
+  "scp_cut_obligations": {
+    "episodes": 240.0,
+    "success_rate": 1.0,
+    "mean_cost_successes": 28.883333333333333,
+    "mean_expansions": 60.96666666666667,
+    "mean_pruned_commitments": 4.8125
+  },
+  "comparison": {
+    "scp_expansion_fraction_of_exact": 0.07043928270550005,
+    "scp_expansion_reduction_percent": 92.95607172945
+  }
+}

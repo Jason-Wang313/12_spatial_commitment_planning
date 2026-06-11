@@ -1,0 +1,214 @@
+\documentclass{article}
+\usepackage{iclr2026_conference,times}
+\input{math_commands.tex}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb,amsthm}
+
+\title{Spatial Commitment Planning}
+
+\author{Anonymous Authors}
+
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Robot planners often treat a spatial action as a local transition whose harmful
+consequences can be repaired by later search. This assumption fails when crossing
+a doorway with a payload, pushing an object into a passage, or entering a
+one-way workspace permanently removes access to a future obligation. We introduce
+\emph{spatial commitment planning} (SCP): a planning representation in which
+irreversible spatial commitments are first-class objects. The central object is a
+\emph{cut-obligation certificate}. For a directed spatial boundary, the
+certificate records which unserved task obligations would be outside the
+surviving reachable set after crossing. A planner may cross the boundary only
+after those obligations have been discharged. In finite monotone reachability
+graphs, this certificate gives sound pruning and preserves completeness and
+optimality of lifted graph search. In a generated navigation/manipulation
+benchmark with irreversible gates and object-service obligations, local and
+reversibility-relaxed planners fail frequently (39.2\% and
+0.0\% success), while SCP matches exact lifted search success
+(100.0\% versus 100.0\%) and reduces mean search expansions from
+865.5 to 61.0. The evidence is synthetic, but it isolates a real
+mechanism: some robot failures are not uncertainty or insufficient sampling;
+they are unpaid spatial commitments.
+\end{abstract}
+
+\section{Introduction}
+
+Embodied robots do not only move through space; they consume spatial options.
+A mobile manipulator that squeezes through a narrow doorway while carrying a
+large object may be unable to turn around. A rearrangement robot that pushes a
+box into a hallway may remove its own future approach path. A navigation system
+that enters a one-way service corridor may strand an object that still needed to
+be inspected. Standard planning abstractions can represent these effects if a
+domain designer hand-writes the right irreversible predicates, but the effects
+are rarely treated as the central planning object.
+
+This paper asks what changes if irreversible spatial commitments are promoted
+from accidental failure modes to first-class planning objects. The proposed
+answer is simple: each candidate boundary crossing should expose a certificate
+of the obligations it would make unreachable. Search then reasons over the
+certificate before committing, not after discovering that a partial plan has
+painted itself into a spatial corner.
+
+The contribution is intentionally narrow. We do not propose a larger model, a
+new learned planner, an uncertainty wrapper, or a benchmark alone. We define
+cut-obligation certificates for monotone reachability graphs, prove the pruning
+rule sound, and provide runnable evidence that the broken reversibility
+assumption matters even in fully known deterministic worlds.
+
+\section{Hostile Prior-Work Boundary}
+
+Motion planning already provides mature graph and sampling methods for geometric
+feasibility \citep{lavalle2006planning,kavraki1996probabilistic,lavalle1998rapidly}.
+Task-and-motion planning (TAMP) integrates symbolic search with geometric tests
+and samplers \citep{kaelbling2011hierarchical,srivastava2014combined,toussaint2015logic,garrett2021pddlstream}.
+Navigation among movable obstacles and rearrangement planning reason about
+objects that block access \citep{stilman2005navigation,stilman2007manipulation,krontiris2015dealing},
+and contact-rich manipulation work studies pushes and grasps that change object
+poses \citep{dogar2011pushgrasping}. Classical graph search already gives
+optimality once the correct lifted state is specified \citep{hart1968formal,ghallab2004automated}.
+
+These areas make many broad claims less novel: this paper cannot claim novelty
+for geometric search, symbolic-geometric integration, object rearrangement, or
+optimal graph search. The remaining boundary is the mechanism: derive a spatial
+cut, attach the unpaid obligations it would delete, and plan over that object.
+The hostile audit in \texttt{docs/hostile\_prior\_work.md} records 100 prior
+papers most likely to compress this boundary.
+
+\section{Spatial Commitments}
+
+Let $G=(V,E)$ be a finite directed graph of robot configurations or roadmap
+regions. Let $\Omega$ be a set of task obligations, such as object visits,
+deliveries, inspections, or terminal goals. Each obligation $\omega \in \Omega$
+has a support set $L(\omega)\subseteq V$ where it can still be discharged.
+
+\begin{definition}[Monotone spatial effect]
+Each edge $e=(u,v)$ has a survivor set $\sigma(e)\subseteq V$. Traversing $e$
+updates the live reachable set from $A$ to $A \cap \sigma(e)$. Ordinary
+reversible motions have $\sigma(e)=V$; irreversible gates, blocking placements,
+or one-way passages have strict survivor sets.
+\end{definition}
+
+\begin{definition}[Cut-obligation certificate]
+For edge $e$ and obligation set $\Omega$, the certificate is
+\[
+  C(e) = \{\omega \in \Omega: L(\omega)\cap\sigma(e)=\emptyset\}.
+\]
+These are exactly the obligations that would become impossible if $e$ were
+crossed before they were discharged.
+\end{definition}
+
+SCP searches in lifted states $(q,D,A)$ where $q$ is the current region, $D$ is
+the set of discharged obligations, and $A$ is the current live set. A transition
+$e$ is expanded only if all obligations in $C(e)$ are already in $D$. When an
+edge is accepted, $A$ is updated by the monotone survivor rule and any obligations
+supported at the new state are discharged.
+
+\begin{proposition}[Sound pruning]
+If an undispatched obligation $\omega\notin D$ lies in $C(e)$, no successful
+continuation can traverse $e$ from state $(q,D,A)$.
+\end{proposition}
+\begin{proof}
+After traversing $e$, the live set is $A' = A\cap\sigma(e)$. Since
+$L(\omega)\cap\sigma(e)=\emptyset$, no future state in $A'$ can support
+$\omega$. Monotonicity only shrinks live sets, so no later action can restore
+support for $\omega$. Thus any plan containing this transition before
+discharging $\omega$ cannot satisfy all obligations.
+\end{proof}
+
+\begin{proposition}[Completeness and optimality under finite monotone effects]
+On a finite graph with nonnegative edge costs, A* or Dijkstra search over
+$(q,D,A)$ is complete and cost-optimal with an admissible heuristic. Adding the
+certificate pruning rule preserves both properties.
+\end{proposition}
+\begin{proof}
+Without pruning this is ordinary shortest-path search on a finite lifted graph.
+The previous proposition shows every pruned transition is absent from all
+successful plans, so pruning cannot remove an optimal successful plan.
+\end{proof}
+
+\section{Commitment-Zone Benchmark}
+
+We generate deterministic navigation/manipulation planning instances. The world
+is a chain of spatial zones. Within a zone, local motions are reversible. Between
+zones, a directed gate is feasible but irreversible: after crossing from zone
+$i$ to $i+1$, all zones up to $i$ are removed from the live set. Object-service
+obligations are placed throughout the zones, and the robot must service all
+objects before reaching a terminal goal in the last zone. This is a deliberately
+minimal abstraction of crossing a one-way corridor or moving a payload/obstacle
+so that the previous side is no longer accessible.
+
+We compare four planners. \emph{Greedy local} is a progress-biased local
+planner that prefers nearby obligations deeper toward the terminal zone in the
+relaxed graph. \emph{Relaxed agenda} builds an agenda that assumes gates are
+reversible. \emph{Exact lifted A*} searches over position, completed
+obligations, and live zone suffix. \emph{SCP} uses the same lifted state but
+attaches cut-obligation certificates to gates and prunes gates that would strand
+unserved obligations.
+
+\section{Results}
+
+\begin{table}[t]
+\centering
+\input{results_table.tex}
+\caption{Generated commitment-zone results over 240 episodes. SCP matches exact
+lifted search success while pruning branches that cross irreversible gates before
+their obligations are paid.}
+\label{tab:results}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=.48\linewidth]{../figures/success_rates.pdf}
+\includegraphics[width=.48\linewidth]{../figures/expansions.pdf}
+\caption{Left: local and reversibility-relaxed planners often strand required
+objects behind irreversible gates. Right: cut-obligation certificates reduce
+search expansions relative to exact lifted A*.}
+\label{fig:results}
+\end{figure}
+
+Table~\ref{tab:results} and Figure~\ref{fig:results} support two claims.
+First, the false reversibility assumption matters: planners that do not expose
+commitments as state achieve only 39.2\% and 0.0\% success
+despite full deterministic knowledge. Second, SCP is not merely an execution
+checker. It changes search by refusing to expand gate crossings with unpaid
+certificates, reducing mean expansions by 93.0\% while preserving the
+same success rate as exact lifted A* in this benchmark.
+
+\section{Limitations}
+
+The evidence is synthetic and should not be oversold. The benchmark isolates a
+monotone access-loss mechanism; real manipulation can include nonmonotone
+recoveries, deformable contacts, uncertain perception, and expensive continuous
+cut extraction. The formal claim assumes finite survivor sets and known
+obligation supports. The paper therefore argues for a mechanism and a research
+direction, not for a deploy-ready robot planning stack.
+
+\section{Conclusion}
+
+Spatial commitment planning reframes a class of robot planning failures. A bad
+branch is not always bad because the planner lacks samples, data, or a verifier;
+sometimes the branch crossed a boundary before paying the obligations that would
+be stranded behind it. Cut-obligation certificates make that boundary explicit,
+giving planners a small, auditable object to reason about before irreversible
+spatial choices are made.
+
+\bibliography{references}
+\bibliographystyle{iclr2026_conference}
+
+\appendix
+\section{Reproducibility Notes}
+The repository contains the full generator and all generated CSV/JSON outputs.
+Run \texttt{python scripts/run\_experiments.py} from the repository root to
+regenerate the benchmark results and figures. The literature matrix and hostile
+prior-work documents are generated by \texttt{scripts/collect\_literature.py}
+and \texttt{scripts/synthesize\_docs.py}.
+
+\end{document}

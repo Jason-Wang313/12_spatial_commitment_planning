@@ -1,0 +1,32 @@
+{
+  "rows": 1109,
+  "target": 1100,
+  "output": "docs\\related_work_matrix.csv",
+  "sha256_16": "5e51d01e1e230c2c",
+  "queries": [
+    "robot task and motion planning manipulation navigation",
+    "integrated task and motion planning robotics manipulation",
+    "navigation among movable obstacles robot planning",
+    "robot rearrangement planning manipulation",
+    "object rearrangement planning robotics",
+    "mobile manipulation planning narrow passages",
+    "geometric task planning robot manipulation",
+    "pddlstream task motion planning robotics",
+    "logic geometric programming robot planning",
+    "robot path planning irreversible actions",
+    "robot planning one way constraints navigation manipulation",
+    "planning with movable obstacles robot navigation",
+    "multi object manipulation planning robot",
+    "nonprehensile manipulation planning robot pushing",
+    "motion planning under differential constraints robot manipulation",
+    "belief space planning robot manipulation navigation",
+    "contingent planning robotics navigation manipulation",
+    "symbolic geometric planning robotics",
+    "sampling based motion planning robotics manipulation",
+    "robot planning reachability graph navigation manipulation",
+    "rearrangement among movable obstacles manipulation planning",
+    "robot navigation planning dead end traps",
+    "contact rich manipulation planning robotics",
+    "embodied agent physical reasoning planning navigation manipulation"
+  ]
+}
