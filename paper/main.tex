@@ -16,6 +16,7 @@
 
 \begin{document}
 \maketitle
+\noindent\textbf{Submission-hardening v2, 2026-06-12.} Added a certificate-corruption stress test that separates missed cut obligations from spurious cut obligations.
 
 \begin{abstract}
 Robot planners often treat a spatial action as a local transition whose harmful
@@ -34,7 +35,11 @@ benchmark with irreversible gates and object-service obligations, local and
 reversibility-relaxed planners fail frequently (39.2\% and
 0.0\% success), while SCP matches exact lifted search success
 (100.0\% versus 100.0\%) and reduces mean search expansions from
-865.5 to 61.0. The evidence is synthetic, but it isolates a real
+865.5 to 61.0. A v2 certificate-corruption stress shows the key
+boundary: false-negative certificates retain 100.0\% success but raise
+mean expansions to 713.4 when all cuts are missed, while false-positive
+certificates reduce success to 80.4\% at only 1\% spurious cut entries.
+The evidence is synthetic, but it isolates a real
 mechanism: some robot failures are not uncertainty or insufficient sampling;
 they are unpaid spatial commitments.
 \end{abstract}
@@ -164,6 +169,15 @@ their obligations are paid.}
 \label{tab:results}
 \end{table}
 
+\begin{table}[t]
+\centering
+\input{../results/certificate_noise_table.tex}
+\caption{V2 certificate-corruption stress. False negatives omit true cut
+obligations and therefore reduce pruning; false positives add spurious future
+obligations and can prune valid plans.}
+\label{tab:certificate-noise}
+\end{table}
+
 \begin{figure}[t]
 \centering
 \includegraphics[width=.48\linewidth]{../figures/success_rates.pdf}
@@ -182,12 +196,23 @@ checker. It changes search by refusing to expand gate crossings with unpaid
 certificates, reducing mean expansions by 93.0\% while preserving the
 same success rate as exact lifted A* in this benchmark.
 
+Table~\ref{tab:certificate-noise} prevents overclaiming. If the certificate
+misses true cut obligations, SCP remains complete in this lifted simulator but
+loses its pruning advantage: at 100\% false negatives it still succeeds on all
+episodes but expands 713.4 states on average. Spurious certificate entries are
+more dangerous because they prune valid plans. A 1\% false-positive rate lowers
+success to 80.4\%, and a 10\% false-positive rate lowers success to 20.0\%.
+Thus the supported claim requires conservative cut extraction: missing cuts
+cost search, but hallucinated cuts can destroy completeness.
+
 \section{Limitations}
 
 The evidence is synthetic and should not be oversold. The benchmark isolates a
 monotone access-loss mechanism; real manipulation can include nonmonotone
 recoveries, deformable contacts, uncertain perception, and expensive continuous
-cut extraction. The formal claim assumes finite survivor sets and known
+cut extraction. The v2 stress shows that cut extraction errors have asymmetric
+failure modes: false negatives mainly erase the computational advantage, whereas
+false positives can make valid tasks unsolvable for SCP. The formal claim assumes finite survivor sets and known
 obligation supports. The paper therefore argues for a mechanism and a research
 direction, not for a deploy-ready robot planning stack.
 

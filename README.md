@@ -23,3 +23,7 @@ The compiled PDF is saved by the run procedure to `C:/Users/wangz/Downloads/12.p
 SCP success: 1.0
 
 Exact lifted A* success: 1.0
+
+## Submission-Hardening v2
+
+The v2 pass adds `results/certificate_noise_summary.csv` and a manuscript table separating certificate false negatives from false positives. False negatives preserve 100% success but raise mean expansions to 713.4 when all true cuts are missed. False positives are more damaging: 1% spurious cut entries lower success to 80.4%, and 10% lowers success to 20.0%. This narrows the claim to settings where cut extraction is conservative.
