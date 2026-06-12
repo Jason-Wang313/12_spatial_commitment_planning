@@ -17,7 +17,7 @@ import random
 from collections import defaultdict, deque
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -255,7 +255,11 @@ def heuristic(ep: Episode, pos: int, collected_mask: int) -> int:
     return min(distances.values()) if distances else 0
 
 
-def exact_search(ep: Episode, use_commitment_pruning: bool) -> Tuple[bool, int, int, int, int, str]:
+def exact_search(
+    ep: Episode,
+    use_commitment_pruning: bool,
+    certificate_map: Optional[Dict[int, Set[int]]] = None,
+) -> Tuple[bool, int, int, int, int, str]:
     object_index = {n: i for i, n in enumerate(ep.object_nodes)}
     full_mask = (1 << len(ep.object_nodes)) - 1
     start_mask = 0
@@ -283,8 +287,15 @@ def exact_search(ep: Episode, use_commitment_pruning: bool) -> Tuple[bool, int, 
                 next_min_zone = max(next_min_zone, edge.gate_index + 1)
                 if use_commitment_pruning:
                     blocked = False
+                    certified = certificate_map.get(edge.gate_index, set()) if certificate_map is not None else None
                     for idx, obj in enumerate(ep.object_nodes):
-                        if not (mask & (1 << idx)) and ep.zone_of[obj] < next_min_zone:
+                        if mask & (1 << idx):
+                            continue
+                        if certified is not None:
+                            blocks_obj = idx in certified
+                        else:
+                            blocks_obj = ep.zone_of[obj] < next_min_zone
+                        if blocks_obj:
                             blocked = True
                             break
                     if blocked:
@@ -309,6 +320,25 @@ def commitment_certificate_count(ep: Episode) -> int:
         if blocked_objects:
             count += 1
     return count
+
+
+def build_certificate_map(
+    ep: Episode,
+    rng: random.Random,
+    false_negative_rate: float = 0.0,
+    false_positive_rate: float = 0.0,
+) -> Dict[int, Set[int]]:
+    certificate_map: Dict[int, Set[int]] = {}
+    for gate in range(ep.zones - 1):
+        included: Set[int] = set()
+        for idx, obj in enumerate(ep.object_nodes):
+            truly_blocked = ep.zone_of[obj] <= gate
+            if truly_blocked and rng.random() >= false_negative_rate:
+                included.add(idx)
+            if (not truly_blocked) and rng.random() < false_positive_rate:
+                included.add(idx)
+        certificate_map[gate] = included
+    return certificate_map
 
 
 def run(seed: int = 12, episodes: int = 240) -> List[Dict[str, object]]:
@@ -405,6 +435,59 @@ def summarize(rows: List[Dict[str, object]]) -> Dict[str, Dict[str, float]]:
     return summary
 
 
+def certificate_noise_stress(seed: int = 1212, episodes: int = 240) -> List[Dict[str, object]]:
+    episode_rng = random.Random(seed)
+    episodes_list = [make_episode(episode_rng, episode_id) for episode_id in range(episodes)]
+    configs = [("false_negative", r) for r in [0.0, 0.25, 0.50, 0.75, 1.0]]
+    configs.extend(("false_positive", r) for r in [0.0, 0.01, 0.02, 0.05, 0.10])
+    rows: List[Dict[str, object]] = []
+    for corruption_type, rate in configs:
+        successes = 0
+        expansions: List[float] = []
+        pruned: List[float] = []
+        for ep in episodes_list:
+            cert_rng = random.Random(seed + ep.episode_id * 7919 + int(rate * 10000) + (0 if corruption_type == "false_negative" else 500000))
+            certificate_map = build_certificate_map(
+                ep,
+                cert_rng,
+                false_negative_rate=rate if corruption_type == "false_negative" else 0.0,
+                false_positive_rate=rate if corruption_type == "false_positive" else 0.0,
+            )
+            ok, _cost, _gates, expanded, pruned_count, _reason = exact_search(ep, True, certificate_map)
+            successes += int(ok)
+            expansions.append(float(expanded))
+            pruned.append(float(pruned_count))
+        rows.append(
+            {
+                "corruption_type": corruption_type,
+                "rate": rate,
+                "episodes": episodes,
+                "success_rate": successes / episodes,
+                "mean_expansions": sum(expansions) / episodes,
+                "mean_pruned_commitments": sum(pruned) / episodes,
+            }
+        )
+    return rows
+
+
+def write_certificate_noise_table(rows: List[Dict[str, object]]) -> None:
+    lines = [
+        "\\begin{tabular}{llrrr}",
+        "\\toprule",
+        "Corruption & Rate & Success & Mean expansions & Pruned \\\\",
+        "\\midrule",
+    ]
+    labels = {"false_negative": "False negative", "false_positive": "False positive"}
+    for row in rows:
+        lines.append(
+            f"{labels[str(row['corruption_type'])]} & {100 * float(row['rate']):.0f}\\% & "
+            f"{float(row['success_rate']):.3f} & {float(row['mean_expansions']):.1f} & "
+            f"{float(row['mean_pruned_commitments']):.1f} \\\\"
+        )
+    lines.extend(["\\bottomrule", "\\end{tabular}"])
+    (RESULTS / "certificate_noise_table.tex").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def write_outputs(rows: List[Dict[str, object]]) -> None:
     fields = [
         "episode_id",
@@ -427,6 +510,22 @@ def write_outputs(rows: List[Dict[str, object]]) -> None:
         writer.writerows(rows)
     summary = summarize(rows)
     (RESULTS / "summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
+    certificate_rows = certificate_noise_stress()
+    with (RESULTS / "certificate_noise_summary.csv").open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(
+            f,
+            fieldnames=[
+                "corruption_type",
+                "rate",
+                "episodes",
+                "success_rate",
+                "mean_expansions",
+                "mean_pruned_commitments",
+            ],
+        )
+        writer.writeheader()
+        writer.writerows(certificate_rows)
+    write_certificate_noise_table(certificate_rows)
     print(json.dumps(summary, indent=2))
     try:
         import matplotlib.pyplot as plt
