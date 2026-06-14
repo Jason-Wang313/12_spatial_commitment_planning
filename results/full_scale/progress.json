@@ -1,0 +1,11 @@
+{
+  "stage": "complete",
+  "seed_count": 30,
+  "family_a_rows": 180,
+  "family_b_rows": 30,
+  "family_c_rows": 17,
+  "family_d_rows": 60,
+  "family_e_rows": 90,
+  "family_f_rows": 6,
+  "plot_failures": 0
+}

@@ -1,0 +1,13 @@
+{
+  "master_seed": 12012,
+  "seed_count": 30,
+  "families": [
+    "zone_scaling",
+    "topology",
+    "certificate_corruption",
+    "nonmonotone_recovery",
+    "geometry_proxy",
+    "ablation"
+  ],
+  "plot_failures": []
+}
