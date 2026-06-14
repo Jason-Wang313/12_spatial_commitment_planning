@@ -14,17 +14,17 @@
 
 7. **Proof/formal-claim status:** Finite monotone reachability graph claims are proved in the paper: sound pruning and preservation of completeness/optimality for lifted shortest-path search with admissible heuristic. No continuous-space completeness claim is made.
 
-8. **Strongest evidence:** Generated commitment-zone experiments: SCP success 1.0, exact lifted A* success 1.0, greedy local success 0.39166666666666666, relaxed agenda success 0.0; SCP expansion reduction 92.95607172945 percent. V2 certificate-corruption stress: false negatives preserve success but raise mean expansions to 713.4 at 100% omission, while false positives lower success to 0.804 at 1% spurious entries and 0.200 at 10%.
+8. **Strongest evidence:** V3 full-scale results across six families. In the 10-zone medium-pressure setting, SCP success is 1.000 and exact lifted A* success is 1.000; SCP uses 183.4 mean expansions versus 7506.9 for exact lifted A*. Topology variants preserve SCP success at 1.000 across chain, bypass, room grid, loop collapse, warehouse, and payload orientation. Certificate false negatives preserve success but raise expansions to 2279.8 at 100% omission, while false positives lower success to 0.871 at 1% spurious cuts and 0.000 at 10%. Recovery-aware SCP succeeds at 1.000 with mean cost 40.3 in the cost-5, 50% recoverable setting. Conservative geometry-proxy extraction reaches 0.992 success at 40-cell scale and 5% extraction noise.
 
-9. **Biggest weaknesses:** Synthetic benchmark; monotone survivor-set assumption; no real robot or mature TAMP benchmark; cut extraction in continuous contact-rich domains remains future work. The v2 stress shows that spurious cut obligations can prune valid plans, so conservative cut extraction is required.
+9. **Biggest weaknesses:** Synthetic benchmark; finite monotone survivor-set assumption for formal guarantees; no real robot or mature TAMP benchmark; cut extraction in continuous contact-rich domains remains future work. The v3 stress shows that spurious cut obligations can prune valid plans, so conservative cut extraction is required.
 
-10. **Paper-readiness judgment:** workshop / revise. The mechanism is crisp and runnable, but the evidence needs real robotics domains before a confident ICLR submission.
+10. **Paper-readiness judgment:** final for bounded mechanism-paper submission. It should not be represented as a hardware result or a general continuous TAMP result.
 
-11. **Exact Downloads PDF path:** `C:/Users/wangz/Downloads/12.pdf` (168,720 bytes).
+11. **Exact Downloads PDF path:** `C:/Users/wangz/Downloads/12.pdf` (25 pages, 410,264 bytes).
 
 12. **GitHub URL:** https://github.com/Jason-Wang313/12_spatial_commitment_planning
 
-13. **Visible Desktop PDF copy status:** pending orchestrator copy.
+13. **Visible Desktop PDF copy status:** no new Desktop copy created during v3 hardening.
 
 ## Submission-Hardening v2
 
@@ -34,6 +34,15 @@ Decision: Workshop-only / revise before main-conference submission.
 Reason: The mechanism is crisp and reproducible, but evidence remains a synthetic monotone-zone benchmark without hardware, mature TAMP benchmarks, or continuous cut-extraction validation.
 Downloads PDF: C:/Users/wangz/Downloads/12.pdf (168,720 bytes)
 Desktop policy: no new Desktop copy created during v2 hardening.
+
+## Submission-Hardening v3
+
+Checked: 2026-06-14
+Action: Added full-scale runner, six experiment families, generated `results/full_scale/` artifacts, rewrote the manuscript to 25 pages, and updated claim-boundary docs.
+Decision: Final for bounded mechanism-paper submission.
+Reason: The package now includes scaling, topology, corruption, recovery, geometry-proxy, and ablation evidence. The remaining weaknesses are explicit limitations, not hidden gaps in the stated claim.
+Downloads PDF: C:/Users/wangz/Downloads/12.pdf (25 pages, 410,264 bytes)
+Desktop policy: no new Desktop copy created during v3 hardening.
 
 ## Orchestrator Desktop Copy
 

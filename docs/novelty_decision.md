@@ -14,3 +14,7 @@ The seed suggested planning with irreversible commitments. The literature sweep 
 - A benchmark alone would only expose the failure mode.
 - A verifier would detect failure after proposing a branch; the proposed mechanism changes what search expands.
 - Generic uncertainty handling misidentifies the issue: the benchmark is fully known and still breaks reversible abstractions.
+
+## v3 Claim Boundary
+
+The full-scale pass strengthens the mechanism rather than broadening it into a different paper. The final claim remains boundary-attached cut-obligation certificates for finite spatial commitments. The new evidence shows scaling, topology transfer, corruption asymmetry, recovery boundaries, geometry-proxy sensitivity, and ablation separation. The paper still does not claim hardware deployment, full continuous TAMP extraction, or robustness to hallucinated cut obligations.

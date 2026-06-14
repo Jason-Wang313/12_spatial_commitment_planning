@@ -5,10 +5,7 @@ Anonymous ICLR-style mechanism paper package for paper 12 in the robotics batch.
 ## Reproduce
 
 ```powershell
-python scripts/collect_literature.py
 python scripts/run_experiments.py
-python scripts/synthesize_docs.py
-python scripts/write_paper.py
 cd paper
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 bibtex main
@@ -16,14 +13,19 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-The compiled PDF is saved by the run procedure to `C:/Users/wangz/Downloads/12.pdf`.
+The stable runner dispatches to `experiments/full_scale_spatial_commitment.py` and writes the v3 evidence package under `results/full_scale/`. The final verified PDF target is `C:/Users/wangz/Downloads/12.pdf`; intermediate `paper/main.pdf` builds are local artifacts only.
 
 ## Current headline result
 
-SCP success: 1.0
+Submission-hardening version: v3, dated 2026-06-14.
 
-Exact lifted A* success: 1.0
+- Final manuscript build: 25 pages after `pdflatex`, `bibtex`, `pdflatex`, `pdflatex`.
+- Full-scale scope: six experiment families with 30 seed replicates per setting where applicable.
+- Main scaling result at 10 medium zones, pressure 2: SCP success 1.000, exact lifted A* success 1.000, SCP expansions 183.4 versus exact lifted A* 7506.9.
+- Certificate corruption result: 100% false negatives preserve success at 1.000 but raise expansions to 2279.8; 1% false positives lower success to 0.871.
+- Recovery stress result: recovery-aware SCP succeeds at 1.000 with mean cost 40.3 under 50% recoverable cuts, while the strict monotone certificate claim remains intentionally bounded.
+- Geometry proxy result: conservative extracted certificates reach 0.992 success at 40-cell scale with 5% extraction noise.
 
-## Submission-Hardening v2
+## Submission-Hardening v3
 
-The v2 pass adds `results/certificate_noise_summary.csv` and a manuscript table separating certificate false negatives from false positives. False negatives preserve 100% success but raise mean expansions to 713.4 when all true cuts are missed. False positives are more damaging: 1% spurious cut entries lower success to 80.4%, and 10% lowers success to 20.0%. This narrows the claim to settings where cut extraction is conservative.
+The v3 pass replaces the short v2 artifact with a final-scale mechanism paper. It adds zone scaling, topology variants, certificate-corruption sweeps, nonmonotone recovery stress, geometry-inspired extraction proxies, component ablations, generated figures/tables, a full experiment report, and a 25-page manuscript. The supported claim is not hardware deployment and not general continuous TAMP; it is a finite-graph spatial-commitment mechanism whose pruning is sound when cut-obligation certificates are conservative.

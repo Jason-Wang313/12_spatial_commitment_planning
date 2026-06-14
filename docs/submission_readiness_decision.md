@@ -1,15 +1,15 @@
 # Submission Readiness Decision
 
 Paper: 12 - Spatial Commitment Planning
-Date: 2026-06-12
-Decision: workshop-only / revise
+Date: 2026-06-14
+Decision: final for bounded mechanism-paper submission
 
 ## Rationale
 
-The paper has a clear planning object, finite-graph propositions, runnable synthetic evidence, and a v2 certificate-corruption stress. The supported claim is that cut-obligation certificates can prune irreversible spatial commitments in monotone finite graphs.
+The paper now has a clear planning object, finite-graph propositions, a six-family full-scale experiment package, generated figures/tables, adversarial certificate-corruption stress, recovery stress, geometry-inspired extraction noise, ablations, and a 25-page final manuscript.
 
-The paper is not ready for a strong main-conference robotics submission because the evidence is synthetic, the monotone survivor-set assumption is restrictive, and continuous cut extraction is not validated. The v2 stress also shows false-positive certificates can prune valid plans.
+The supported claim is precise: cut-obligation certificates can soundly prune irreversible spatial commitments in monotone finite graphs when extraction is conservative. The main 10-zone setting preserves exact lifted A* success while reducing expansions from 7506.9 to 183.4. The paper also reports the boundary: false-positive certificates can prune valid plans, nonmonotone recovery requires explicit state, and full continuous TAMP extraction is not validated.
 
 ## Terminal Recommendation
 
-Submit only to a workshop or keep revising toward mature TAMP/NAMO benchmarks and conservative continuous cut extraction.
+Submit as a bounded mechanism paper with prominent limitations. Do not market it as a hardware result, a mature TAMP/NAMO benchmark result, or a general continuous-space cut-extraction solution.

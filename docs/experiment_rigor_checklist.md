@@ -6,10 +6,18 @@
 - [x] Reversibility-relaxed agenda baseline.
 - [x] Exact lifted A* baseline.
 - [x] SCP with cut-obligation pruning.
-- [x] Certificate false-negative stress added in v2.
-- [x] Certificate false-positive stress added in v2.
-- [x] CSV, JSON, figure, and table artifacts generated.
+- [x] Dead-end aware A* baseline.
+- [x] Lifted no-prune ablation.
+- [x] SCP no-heuristic ablation.
+- [x] Certificate false-negative stress expanded in v3.
+- [x] Certificate false-positive stress expanded in v3.
+- [x] Mixed certificate-corruption setting.
+- [x] Six topology variants beyond a linear chain.
+- [x] Nonmonotone recovery stress with strict, recovery-aware, exact, relaxed, and greedy policies.
+- [x] Geometry-inspired cut-extraction proxy with conservative and aggressive modes.
+- [x] Runtime and memory-proxy table.
+- [x] CSV, JSON, figure, and table artifacts generated under `results/full_scale/`.
+- [x] Manuscript compiles to 25 pages.
 - [ ] Real robot experiment.
 - [ ] Mature TAMP/NAMO benchmark.
-- [ ] Continuous-space cut extraction.
-- [ ] Nonmonotone recovery handling.
+- [ ] Full continuous-space cut extraction.
