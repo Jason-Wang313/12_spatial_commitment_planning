@@ -226,3 +226,14 @@ Paper12 is not final until all are true:
 - Local `paper/main.pdf` is removed after final copy.
 - Commit is pushed.
 - Worktree is clean and `HEAD` matches upstream before moving to Paper13.
+
+## Post-v3 VLA Link-Hardening Acceptance
+
+Checked: 2026-06-21
+
+- Explicit VLA-style `\hypersetup` policy is present in active `paper/main.tex`.
+- Final PDF remains 25 pages and is exported to `C:/Users/wangz/Downloads/12.pdf`.
+- Final export metadata: 410,264 bytes, SHA256 `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`.
+- Link inventory: 48 annotations on pages `[(2, 20), (3, 21), (5, 2), (6, 4), (7, 1)]`; green = 41, red = 7, cyan = 0; all borders `(0, 0, 1)`.
+- Visual audit rendered pages 2, 3, 5, 6, and 7 and confirmed crisp, aligned green citation/URL boxes and red internal-reference boxes.
+- Local `paper/main.pdf` was removed after the canonical copy.

@@ -20,11 +20,15 @@
 
 10. **Paper-readiness judgment:** final for bounded mechanism-paper submission. It should not be represented as a hardware result or a general continuous TAMP result.
 
-11. **Exact Downloads PDF path:** `C:/Users/wangz/Downloads/12.pdf` (25 pages, 410,264 bytes).
+11. **Exact Downloads PDF path:** `C:/Users/wangz/Downloads/12.pdf` (25 pages, 410,264 bytes, SHA256 `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`).
 
-12. **GitHub URL:** https://github.com/Jason-Wang313/12_spatial_commitment_planning
+12. **VLA-style boxed-link audit:** 48 link annotations on pages `[(2, 20), (3, 21), (5, 2), (6, 4), (7, 1)]`; colors green = 41, red = 7, cyan = 0; all borders `(0, 0, 1)`.
 
-13. **Visible Desktop PDF copy status:** no new Desktop copy created during v3 hardening.
+13. **Visual link audit:** pages 2, 3, 5, 6, and 7 rendered after export; green citation/URL boxes and red internal-reference boxes are crisp and aligned.
+
+14. **GitHub URL:** https://github.com/Jason-Wang313/12_spatial_commitment_planning
+
+15. **Visible Desktop PDF copy status:** no new Desktop copy created during v3 hardening.
 
 ## Submission-Hardening v2
 
@@ -43,6 +47,15 @@ Decision: Final for bounded mechanism-paper submission.
 Reason: The package now includes scaling, topology, corruption, recovery, geometry-proxy, and ablation evidence. The remaining weaknesses are explicit limitations, not hidden gaps in the stated claim.
 Downloads PDF: C:/Users/wangz/Downloads/12.pdf (25 pages, 410,264 bytes)
 Desktop policy: no new Desktop copy created during v3 hardening.
+
+## VLA-Style Link Hardening
+
+Checked: 2026-06-21
+Action: Added explicit VLA-style `\hypersetup` policy, rebuilt with `pdflatex`, `bibtex`, `pdflatex`, `pdflatex`, copied the final PDF to Downloads, and removed local `paper/main.pdf`.
+Decision: Final link styling matches the visible VLA-v4 role model.
+Downloads PDF: C:/Users/wangz/Downloads/12.pdf (25 pages, 410,264 bytes, SHA256 `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`)
+Link audit: 48 annotations on pages `[(2, 20), (3, 21), (5, 2), (6, 4), (7, 1)]`; green = 41, red = 7, cyan = 0; all borders `(0, 0, 1)`.
+Visual audit: rendered pages 2, 3, 5, 6, and 7; boxes are crisp and aligned.
 
 ## Orchestrator Desktop Copy
 
