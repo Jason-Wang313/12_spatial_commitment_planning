@@ -18,6 +18,8 @@
 - [x] Runtime and memory-proxy table.
 - [x] CSV, JSON, figure, and table artifacts generated under `results/full_scale/`.
 - [x] Manuscript compiles to 25 pages.
+- [x] Final Downloads PDF verified: 25 pages, 410,264 bytes, SHA256 `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`.
+- [x] Final VLA-style boxed-link audit verified: 48 annotations, green = 41, red = 7, cyan = 0, all borders `(0, 0, 1)`.
 - [ ] Real robot experiment.
 - [ ] Mature TAMP/NAMO benchmark.
 - [ ] Full continuous-space cut extraction.

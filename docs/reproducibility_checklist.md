@@ -10,6 +10,10 @@
 - [x] Manuscript builds with `pdflatex`, `bibtex`, `pdflatex`, `pdflatex` from `paper/`.
 - [x] Local final-build PDF is 25 pages before canonical copy.
 - [x] Canonical PDF target is `C:/Users/wangz/Downloads/12.pdf`.
+- [x] Canonical PDF export verified: 25 pages, 410,264 bytes, SHA256 `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`.
+- [x] VLA-style boxed-link inventory verified: 48 annotations on pages `[(2, 20), (3, 21), (5, 2), (6, 4), (7, 1)]`; green = 41, red = 7, cyan = 0; all borders `(0, 0, 1)`.
+- [x] Visual render audit checked pages 2, 3, 5, 6, and 7 after export.
+- [x] Local build artifact `paper/main.pdf` removed after export.
 - [x] No new Desktop PDF copy is created in the v3 hardening pass.
 - [ ] Dependency versions are pinned.
 - [ ] Hardware data exists.

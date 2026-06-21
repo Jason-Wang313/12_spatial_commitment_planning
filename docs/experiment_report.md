@@ -34,3 +34,12 @@
 - `figure_recovery_stress`
 - `figure_geometry_proxy`
 - `figure_ablation`
+
+## Final Artifact
+
+- Canonical PDF: `C:/Users/wangz/Downloads/12.pdf`
+- Pages: 25
+- Size: 410,264 bytes
+- SHA256: `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`
+- VLA-style boxed-link inventory: 48 annotations on pages `[(2, 20), (3, 21), (5, 2), (6, 4), (7, 1)]`; green = 41, red = 7, cyan = 0; all borders `(0, 0, 1)`.
+- Visual audit: rendered pages 2, 3, 5, 6, and 7 after export and confirmed crisp, aligned link boxes.

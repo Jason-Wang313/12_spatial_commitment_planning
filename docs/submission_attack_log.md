@@ -31,3 +31,9 @@ Decision: final under bounded mechanism-paper scope
 - No full continuous-space cut extraction.
 - Finite monotone survivor-set assumption for the formal guarantee.
 - False-positive certificates can break completeness.
+
+## Artifact Hardening Note
+
+The 2026-06-21 export explicitly matches the visible VLA-v4 boxed-link convention:
+green citation/URL boxes, red internal-reference boxes, one-point borders, and no
+cyan link boxes in the audited final PDF.

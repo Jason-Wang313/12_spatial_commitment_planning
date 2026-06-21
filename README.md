@@ -13,7 +13,16 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-The stable runner dispatches to `experiments/full_scale_spatial_commitment.py` and writes the v3 evidence package under `results/full_scale/`. The final verified PDF target is `C:/Users/wangz/Downloads/12.pdf`; intermediate `paper/main.pdf` builds are local artifacts only.
+The stable runner dispatches to `experiments/full_scale_spatial_commitment.py` and writes the v3 evidence package under `results/full_scale/`. The final verified PDF target is `C:/Users/wangz/Downloads/12.pdf`; intermediate `paper/main.pdf` builds are local artifacts only and are removed after the final copy.
+
+Current final export: 25 pages, 410,264 bytes, SHA256 `A2E7BE0F3316564429D507F211A6C4479F5BC6614372B327BFAE1A8448866B4B`.
+
+VLA-style boxed-link verification:
+
+- Link annotations: 48 total on pages `[(2, 20), (3, 21), (5, 2), (6, 4), (7, 1)]`.
+- Annotation colors: green = 41, red = 7, cyan = 0.
+- Border widths: `(0, 0, 1)` for all link annotations.
+- Visual audit: rendered pages 2, 3, 5, 6, and 7; green citation/URL boxes and red internal-reference boxes are crisp and aligned.
 
 ## Current headline result
 
